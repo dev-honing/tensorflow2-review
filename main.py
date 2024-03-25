@@ -61,8 +61,43 @@ loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True) # 
 optimizer = tf.keras.optimizers.Adam() # 최적화 알고리즘
 
 #* 8. 손실 및 정확도 지표 설정
+# 훈련용 데이터에 대한 평균 손실 및 정확도 지표 설정
 train_loss = tf.keras.metrics.Mean(name='train_loss') # 훈련 손실
 train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy') # 훈련 정확도
 
+# 테스트용 데이터에 대한 평균 손실 및 정확도 지표 설정
 test_loss = tf.keras.metrics.Mean(name='test_loss') # 테스트 손실
 test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy') # 테스트 정확도
+
+#* 9. 스텝 함수 정의 - 훈련용 및 테스트용
+@tf.function
+# 훈련용 스텝 함수: 주어진 이미지 및 라벨로 모델을 훈련하고 손실 및 성능 지표 업데이트
+def train_step(images, labels):
+    # 계산을 위한 Gradient 컨텍스트 생성
+    with tf.GradientTape() as tape:
+        # 모델에 이미지 전달 및 예측
+        predictions = model(images, training=True)
+        # 손실 계산
+        loss = loss_object(labels, predictions)
+    
+    # 손실에 대한 모델의 그래디언트 계산
+    gradients = tape.gradient(loss, model.trainable_variables)
+
+    # 옵티마이저를 사용해 가중치 업데이트
+    optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+
+    # 훈련용 데이터에 대한 손실 및 정확도 지표 업데이트
+    train_loss(loss)
+    train_accuracy(labels, predictions)
+
+@tf.function
+# 테스트용 스텝 함수: 주어진 이미지 및 라벨로 모델을 평가하고 손실 및 성능 지표 업데이트
+def test_step(images, labels):
+    # 모델에 이미지 전달 및 예측
+    predictions = model(images, training=False)
+    # 손실 계산
+    t_loss = loss_object(labels, predictions)
+
+    # 테스트용 데이터에 대한 손실 및 정확도 지표 업데이트
+    test_loss(t_loss)
+    test_accuracy(labels, predictions)
