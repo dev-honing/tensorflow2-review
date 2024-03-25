@@ -59,3 +59,10 @@ model = MyModel()
 loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True) # 손실함수
 
 optimizer = tf.keras.optimizers.Adam() # 최적화 알고리즘
+
+#* 8. 손실 및 정확도 지표 설정
+train_loss = tf.keras.metrics.Mean(name='train_loss') # 훈련 손실
+train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy') # 훈련 정확도
+
+test_loss = tf.keras.metrics.Mean(name='test_loss') # 테스트 손실
+test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy') # 테스트 정확도
