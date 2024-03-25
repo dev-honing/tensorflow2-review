@@ -10,12 +10,12 @@ from tensorflow.keras import Model
 
 mnist = tf.keras.datasets.mnist # keras 데이터셋 중에서 MNIST 데이터셋을 변수에 할당
 
-#* 3. MNIST 데이터셋을 훈련용 데이터와 테스트 데이터로 나누기
+#* 3. MNIST 데이터셋을 훈련용 데이터와 테스트용 데이터로 나누기
 (x_train, y_train), (x_test, y_test) = mnist.load_data() # 데이터셋 로드
 x_train, x_test = x_train / 255.0, x_test / 255.0 
 
 #? 데이터를 나누는 이유?
-# 훈련 데이터로 모델을 학습시킨 후, 테스트 데이터로 모델을 평가하기 위함
+# 훈련용 데이터로 모델을 학습시킨 후, 테스트용 데이터로 모델을 평가하기 위함
 
 #* 4. 각 데이터셋에 차원 추가 및 데이터 타입 변경
 x_train = x_train[..., tf.newaxis].astype("float32")
@@ -66,8 +66,8 @@ train_loss = tf.keras.metrics.Mean(name='train_loss') # 훈련 손실
 train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy') # 훈련 정확도
 
 # 테스트용 데이터에 대한 평균 손실 및 정확도 지표 설정
-test_loss = tf.keras.metrics.Mean(name='test_loss') # 테스트 손실
-test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy') # 테스트 정확도
+test_loss = tf.keras.metrics.Mean(name='test_loss') # 테스트용 손실
+test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy') # 테스트용 정확도
 
 #* 9. 스텝 함수 정의 - 훈련용 및 테스트용
 @tf.function
@@ -101,3 +101,31 @@ def test_step(images, labels):
     # 테스트용 데이터에 대한 손실 및 정확도 지표 업데이트
     test_loss(t_loss)
     test_accuracy(labels, predictions)
+
+# 10. 모델 훈련
+EPOCHS = 5
+
+# 지표 초기화 및 에포크 반복
+for epoch in range(EPOCHS):
+    # 에포크 시작 시 지표를 초기화
+    train_loss.reset_states()
+    train_accuracy.reset_states()
+    test_loss.reset_states()
+    test_accuracy.reset_states()
+
+    # 훈련용 데이터 세트를 순회하며 모델을 훈련
+    for images, labels in train_ds:
+        train_step(images, labels)
+    
+    # 테스트용 데이터 세트를 순회하며 모델을 평가
+    for test_images, test_labels in test_ds:
+        test_step(test_images, test_labels)
+    
+    # 에포트마다 손실 및 정확도를 출력
+    print(
+        f'Epoch {epoch + 1}, '
+        f'Loss: {train_loss.result()}, '
+        f'Accuracy: {train_accuracy.result() * 100}, '
+        f'Test Loss: {test_loss.result()}, '
+        f'Test Accuracy: {test_accuracy.result() * 100}'
+    )
