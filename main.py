@@ -102,16 +102,16 @@ def test_step(images, labels):
     test_loss(t_loss)
     test_accuracy(labels, predictions)
 
-# 10. 모델 훈련
+#* 10. 모델 훈련
 EPOCHS = 5
 
 # 지표 초기화 및 에포크 반복
 for epoch in range(EPOCHS):
     # 에포크 시작 시 지표를 초기화
-    train_loss.reset_states()
-    train_accuracy.reset_states()
-    test_loss.reset_states()
-    test_accuracy.reset_states()
+    train_loss.reset_state()
+    train_accuracy.reset_state()
+    test_loss.reset_state()
+    test_accuracy.reset_state()
 
     # 훈련용 데이터 세트를 순회하며 모델을 훈련
     for images, labels in train_ds:
@@ -129,3 +129,28 @@ for epoch in range(EPOCHS):
         f'Test Loss: {test_loss.result()}, '
         f'Test Accuracy: {test_accuracy.result() * 100}'
     )
+
+#* 11. 콘솔에 출력된 결과
+"""
+Administrator@User -2023BIRMN MINGW64 ~/Desktop/ho/tensorflow2-review (main)
+$ python main.py
+2024-03-25 17:53:41.443707: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2024-03-25 17:53:42.194401: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2024-03-25 17:53:44.020678: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-03-25 17:54:44.217908: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+2024-03-25 17:54:44.981128: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+Epoch 1, Loss: 0.12936609983444214, Accuracy: 96.15833282470703, Test Loss: 0.0566282719373703, Test Accuracy: 98.23999786376953
+2024-03-25 17:55:46.018726: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+2024-03-25 17:55:46.713302: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+Epoch 2, Loss: 0.03984072431921959, Accuracy: 98.77166748046875, Test Loss: 0.05685282126069069, Test Accuracy: 98.05999755859375
+2024-03-25 17:56:45.738726: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+2024-03-25 17:56:46.741205: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+Epoch 3, Loss: 0.019433794543147087, Accuracy: 99.37833404541016, Test Loss: 0.05554548278450966, Test Accuracy: 98.32999420166016
+2024-03-25 17:57:46.358867: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+2024-03-25 17:57:47.074266: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+Epoch 4, Loss: 0.011850987561047077, Accuracy: 99.57666015625, Test Loss: 0.05386853590607643, Test Accuracy: 98.33999633789062
+2024-03-25 17:58:45.727581: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+2024-03-25 17:58:46.383442: W tensorflow/core/framework/local_rendezvous.cc:404] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+Epoch 5, Loss: 0.008456694893538952, Accuracy: 99.72833251953125, Test Loss: 0.055616337805986404, Test Accuracy: 98.63999938964844
+"""
