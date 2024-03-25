@@ -54,3 +54,8 @@ class MyModel(Model):
 
 # 모델 객체 생성
 model = MyModel()
+
+#* 7. 손실함수 및 최적화 알고리즘 설정
+loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True) # 손실함수
+
+optimizer = tf.keras.optimizers.Adam() # 최적화 알고리즘
