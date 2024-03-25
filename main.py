@@ -16,3 +16,7 @@ x_train, x_test = x_train / 255.0, x_test / 255.0
 
 #? 데이터를 나누는 이유?
 # 훈련 데이터로 모델을 학습시킨 후, 테스트 데이터로 모델을 평가하기 위함
+
+# 4. 각 데이터셋에 차원 추가 및 데이터 타입 변경
+x_train = x_train[..., tf.newaxis].astype("float32")
+x_test = x_test[..., tf.newaxis].astype("float32")
